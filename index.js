@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+const homepage = require("./models").homepage;
+
 /**
  * Middlewares
  *
@@ -118,16 +120,17 @@ const authMiddleWare = require("./auth/middleware");
  */
 
 // GET endpoint for testing purposes, can be removed
-app.get("/", (req, res) => {
-  res.send("Hi from express");
+app.get("/", async (req, res) => {
+  const homepageLists = await homepage.findAll();
+  res.json(homepageLists);
 });
 
 // POST endpoint for testing purposes, can be removed
 app.post("/echo", (req, res) => {
   res.json({
     youPosted: {
-      ...req.body
-    }
+      ...req.body,
+    },
   });
 });
 
@@ -140,11 +143,11 @@ app.post("/authorized_post_request", authMiddleWare, (req, res) => {
 
   res.json({
     youPosted: {
-      ...req.body
+      ...req.body,
     },
     userFoundWithToken: {
-      ...user.dataValues
-    }
+      ...user.dataValues,
+    },
   });
 });
 
